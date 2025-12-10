@@ -1,0 +1,1 @@
+# Snap-lxqt-support-core22
