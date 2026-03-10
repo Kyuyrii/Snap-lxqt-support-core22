@@ -1,6 +1,6 @@
 name: lxqt-support-core22
 base: core22
-version: '2026-03-03'
+version: '6.10.0'
 platforms:
   amd64:
     build-on: [amd64]
@@ -28,8 +28,8 @@ parts:
     source-tag: V1.1.6
     source-subdir: Kvantum
     build-snaps: &build-snaps
-      - kde-qt6-core22-sdk
-      - kf6-core22-sdk
+      - kde-qt6-core22-sdk/edge
+      - kf6-core22-sdk/edge
     build-packages:
       - cmake
       - make
@@ -47,8 +47,12 @@ parts:
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/usr
       - -DWITHOUT_KF=ON
-    organize:
-      snap/kde-qt6-core22-sdk/current/usr/lib/x86_64-linux-gnu/qt6/plugins/styles/libkvantum.so: usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt6/plugins/styles/libkvantum.so
+    override-build: |
+      craftctl default
+      mkdir -p $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt6/plugins/styles/
+      find $CRAFT_PART_INSTALL -name "libkvantum.so" -type f -exec mv -f {} $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt6/plugins/styles/ \;
+    prime:
+      - -snap
 
   kvantum-theme-lubuntu:
     after: [kvantum]
@@ -68,8 +72,13 @@ parts:
     build-environment: *build-environment
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/usr
+    override-build: |
+      craftctl default
+      mkdir -p $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt6/plugins/platformthemes/
+      find $CRAFT_PART_INSTALL -name "libqtlxqt.so" -type f -exec mv -f {} $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt6/plugins/platformthemes/ \;
+    prime:
+      - -snap
     organize:
-      snap/kde-qt6-core22-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt6/plugins/platformthemes/libqtlxqt.so: usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt6/plugins/platformthemes/libqtlxqt.so
       snap/lxqt-support-core22/current/usr: usr
 
   libdbusmenu-lxqt:
@@ -121,8 +130,13 @@ parts:
     build-environment: *build-environment
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/usr
+    override-build: |
+      craftctl default
+      mkdir -p $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt6/plugins/iconengines/
+      find $CRAFT_PART_INSTALL -name "libQt6XdgIconPlugin.so" -type f -exec mv -f {} $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt6/plugins/iconengines/ \;
+    prime:
+      - -snap
     organize:
-      snap/kde-qt6-core22-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt6/plugins/iconengines/libQt6XdgIconPlugin.so: usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt6/plugins/iconengines/libQt6XdgIconPlugin.so
       snap/lxqt-support-core22/current/usr: usr
 
   lxqt-build-tools:
